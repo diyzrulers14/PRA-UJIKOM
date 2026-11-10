@@ -1,5 +1,5 @@
-# Gunakan PHP 8.5 CLI
-FROM php:8.5-cli
+# Gunakan PHP 8.2 CLI (sesuai dengan requirement Laravel 12)
+FROM php:8.2-cli
 
 # Install dependency dan ekstensi PHP
 RUN apt-get update && apt-get install -y \
@@ -36,8 +36,18 @@ WORKDIR /var/www
 # Copy source code
 COPY . .
 
+# Konfigurasi runtime agar sesuai dengan docker-compose
+ENV APP_ENV=local
+ENV APP_URL=http://localhost:8000
+ENV DB_CONNECTION=mysql
+ENV DB_HOST=mysql-server
+ENV DB_PORT=3306
+ENV DB_DATABASE=API_ujikom
+ENV DB_USERNAME=api_ujikom
+ENV DB_PASSWORD=api_ujikom
+
 # Install dependency Laravel
-RUN composer install
+RUN composer install --no-interaction --prefer-dist --no-progress
 
 # Permission
 RUN chmod -R 775 storage bootstrap/cache
